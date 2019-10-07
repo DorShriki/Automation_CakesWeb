@@ -51,13 +51,8 @@ class Home{
         }
         if(date){ // Insert date to Date input and change date format for comparing
             await seleniuminfra.write(date , "xpath" , `//input[@type='date']`)
-            if(date.includes("/")){
-                newDate = date.split("/")[2]+"-"+date.split("/")[1]+"-"+date.split("/")[0]
-            }if(date.includes(".")){
-                newDate = date.split(".")[2]+"-"+date.split(".")[1]+"-"+date.split(".")[0]
-            }if(date.includes("-")){
-                newDate = date.split("-")[2]+"-"+date.split("-")[1]+"-"+date.split("-")[0]
-            }
+            let spl = date.includes(".")?date.split("."):date.includes("/")?date.split("/"):date.split("-")
+            newDate = spl[2] + "-" + spl[1] + "-" + spl[0]
             stringResult+= `\nDate of upload: ${newDate}`
         }
         if(txt1){ // Insert text to first text input
@@ -70,7 +65,7 @@ class Home{
         }
         await seleniuminfra.clickElement("id" , "myBtnForm") // Click 'Search' Buttons
         results = await seleniuminfra.getTextFromElement("className" , "searchedItem") // getText from search
-        
+
         // console.log(results)
         // console.log(stringResult)
         if(results.split(' ').join('') == stringResult.split(' ').join('')){ // Compare between wanted and result search
@@ -78,6 +73,7 @@ class Home{
         }else{
             console.log("Nooooo!!!!!!!!")
         }
+        await seleniuminfra.clickElement("className" , "close")
     }
 
     // Close the browser

@@ -7,7 +7,7 @@ async function test(){
     // products.validSearch("store")
     // await products.validAdvanceSearch(["asd"] , [4] , "11/11/11" , "bbb" , "ddd")
     // await products.arrowUP(["Chocolate Cake" , "Apple Pie"] , ["Vanilla Cake" , "Red Valvet Cake"])
-    // await products.arrowDown(["Vanilla Cake" ,"Red Valvet Cake"] , ["Chocolate Cake" , "Apple Pie"])
-    await products.cakeExsist("bubu")
-    products.close()
+    await products.arrowDown(["Vanilla Cake" ,"Red Valvet Cake"] , ["Chocolate Cake" , "Apple Pie"])
+    // await products.cakeExsist("bubu")
+    products.close()    
 }

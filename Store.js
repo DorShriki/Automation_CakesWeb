@@ -1,7 +1,7 @@
 const SeleniumInfra = require('./SeleniumInfra')
 const seleniuminfra = new SeleniumInfra()
 
-class Products{
+class Store{
     constructor(URL){
         seleniuminfra.getURL(URL)
     }
@@ -33,7 +33,7 @@ class Products{
     }
 
     // Click on AdvanceSearch, Insert data and valid results
-    async validAdvanceSearch(cakesArr = null , ratesArr = null , date = null , txt1= null  , txt2= null ){
+    async validAdvanceSearch(cakesArr = null , ratesArr = null , day = null , txt1= null  , txt2= null ){
         await seleniuminfra.clickElement("id" , "myBtn")
         let stringResult = "You have searched the following:"
         let results , newDate
@@ -49,9 +49,9 @@ class Products{
             }
             stringResult+= `\nCake ratings: ${ratesArr}`
         }
-        if(date){ // Insert date to Date input and change date format for comparing
-            await seleniuminfra.write(date , "xpath" , `//input[@type='date']`)
-            let spl = date.includes(".")?date.split("."):date.includes("/")?date.split("/"):date.split("-")
+        if(day){ // Insert day to Date input and change day format for comparing
+            await seleniuminfra.write(day , "xpath" , `//input[@type='day']`)
+            let spl = day.includes(".")?day.split("."):day.includes("/")?day.split("/"):day.split("-")
             newDate = spl[2] + "-" + spl[1] + "-" + spl[0]
             stringResult+= `\nDate of upload: ${newDate}`
         }
@@ -74,51 +74,30 @@ class Products{
         await seleniuminfra.clickElement("className" , "close")
     }
 
-    // Click on arrowUp and valid that rows goes up
-    async arrowUP(before , after){
-        let cakeUL = await seleniuminfra.getTextFromElement("xpath" , "//*[@id='productsTable']/tbody/tr[1]/th[1]/div/h3")
-        let cakeUR = await seleniuminfra.getTextFromElement("xpath" , "//*[@id='productsTable']/tbody/tr[1]/th[2]/div/h3")
-        console.log(cakeUL+" , "+cakeUR)
-        if(cakeUL == before[0] && cakeUR == before[1]){
-            console.log("Before Click: First raw is TRUE!")
-        }
-        else{
-            console.log("Not Good!")
-        }
-        await seleniuminfra.clickElement("id" , "arrow-up")
-        cakeUL = await seleniuminfra.getTextFromElement("xpath" , "//*[@id='productsTable']/tbody/tr[1]/th[1]/div/h3")
-        cakeUR = await seleniuminfra.getTextFromElement("xpath" , "//*[@id='productsTable']/tbody/tr[1]/th[2]/div/h3")
-        console.log(cakeUL+" , "+cakeUR)
-        if(cakeUL == after[0] && cakeUR == after[1]){
-            console.log("After Click: First raw is TRUE!")
-        }
-        else{
-            console.log("Not Good!")
+    async checkCurrentDay(){
+        try{
+            const day = await new Date().getDay()
+            const week = ['Sunday' , 'Monday' , 'Tuesday' , 'Wednesday' , 'Thursday' , 'Friday' , 'Saturday']
+            const bold = 'color: rgb(212, 126, 21); font-weight: bold;'
+            if(await seleniuminfra.isElementExists(`css` , `.today[style='${bold}']`)==false){
+                return console.log("Day is not BOLD")
+            }
+            if(await seleniuminfra.isElementExists(`css` , `.todayInfo[style='${bold}']`)==false){
+                return console.log("Info is not BOLD")
+            }
+            const webDay = await seleniuminfra.getTextFromElement(`css` , `.today[style='${bold}']`)
+            const webInfo = await seleniuminfra.getTextFromElement(`css` , `.todayInfo[style='${bold}']`)
+            if(webDay == week[day]){
+                console.log(`Today is ${week[day]} with Info: ${webInfo}. Text is BOLD`)
+            }else{
+                console.log("Today is not Bold")
+            }
+        }catch(Error){
+            console.log(Error)
         }
     }
 
-    //Click on arrowDown and valid that rows goes down
-    async arrowDown(before , after){
-        let cakeDL = await seleniuminfra.getTextFromElement("xpath" , "//*[@id='productsTable']/tbody/tr[2]/th[1]/div/h3")
-        let cakeDR = await seleniuminfra.getTextFromElement("xpath" , "//*[@id='productsTable']/tbody/tr[2]/th[2]/div/h3")
-        console.log(cakeDL+" , "+cakeDR)
-        if(cakeDL == before[0] && cakeDR == before[1]){
-            console.log("Before click: Second raw is TRUE!")
-        }
-        else{
-            console.log("Rows not eqaul")
-        }
-        await seleniuminfra.clickElement("id" , "arrow-down")
-        cakeDL = await seleniuminfra.getTextFromElement("xpath" , "//*[@id='productsTable']/tbody/tr[2]/th[1]/div/h3")
-        cakeDR = await seleniuminfra.getTextFromElement("xpath" , "//*[@id='productsTable']/tbody/tr[2]/th[2]/div/h3")
-        console.log(cakeDL+" , "+cakeDR)
-        if(cakeDL == after[0] && cakeDR == after[1]){
-            console.log("After Click: Second raw is TRUE!")
-        }
-        else{
-            console.log("Rows not eqaul")
-        }
-    }
+
 
     // Close the browser
     async close(){
@@ -126,4 +105,4 @@ class Products{
     }
 }
 
-module.exports = Products
+module.exports = Store

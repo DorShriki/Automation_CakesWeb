@@ -13,7 +13,7 @@ class SelenuimInfra{
 
     async getURL(URL){ // Open browser
         await this.driver.get(URL)
-        await this.driver.manage().window().maximize()
+        // await this.driver.manage().window().maximize()
     }
 
     async close(){ // Close browser
@@ -22,7 +22,7 @@ class SelenuimInfra{
         }, 1000)
     }
 
-    async validURL(pageName){
+    async validURL(pageName){ // Compare convert and wanted URL
         if(this.driver.wait(until.urlContains(pageName) , 10000)){
             console.log("This Is The Right URL")
         }
