@@ -41,6 +41,7 @@ class SelenuimInfra{
                     element = await this.driver.findElement(By[locatorType](locatorValue))
                 }
             }
+            await this.driver.sleep(1000)
             await element.click()
             await this.driver.sleep(1000)
             console.log(`Clicked on element with ${locatorType} = ${locatorValue}`)
